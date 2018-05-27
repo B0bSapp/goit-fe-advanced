@@ -1,92 +1,138 @@
 'use strict';
-class Student {
-  constructor() {}
+class Hamburger {
+  constructor(size, stuffing) {
+    if (size === null || !Hamburger.SIZES.hasOwnProperty(size)) {
+      throw new HamburgerException('Incorrect hamburger size');
+    }
+    if (stuffing === null || !Hamburger.STUFFINGS.hasOwnProperty(stuffing)) {
+      throw new HamburgerException('Incorrect hamburger stuffing');
+    }
+    this._size = size;
+    this._stuffing = stuffing;
+    this._toppings = [];
+  }
+  get size() {
+    return this._size;
+  }
+  get stuffing() {
+    return this._stuffing;
+  }
+  get toppings() {
+    return this._toppings;
+  }
+  addTopping(topping) {
+    if (topping == null || !Hamburger.TOPPINGS.hasOwnProperty(topping)) {
+      throw new HamburgerException('Incorrect hamburger topping');
+    }
+    if (this._toppings.includes(topping)) {
+      throw new HamburgerException('This topping has already been added');
+    }
+    this._toppings.push(topping);
+  }
+  removeTopping(topping) {
+    if (topping == null || !Hamburger.TOPPINGS.hasOwnProperty(topping)) {
+      throw new HamburgerException('Incorrect hamburger topping');
+    }
+    if (!this._toppings.includes(topping)) {
+      throw new HamburgerException("This topping wasn't added");
+    }
+    this._toppings = this._toppings.filter(
+      innerTopping => topping !== innerTopping,
+    );
+  }
+  calculatePrice() {
+    let finalPrice = 0;
+    finalPrice += Hamburger.SIZES[this._size].price;
+    finalPrice += Hamburger.STUFFINGS[this._stuffing].price;
+    finalPrice += this._toppings.reduce(
+      (acc, topping) => acc + Hamburger.TOPPINGS[topping].price,
+      0,
+    );
+    return finalPrice;
+  }
+
+  calculateCalories() {
+    let finalCalories = 0;
+    finalCalories += Hamburger.SIZES[this._size].calories;
+    finalCalories += Hamburger.STUFFINGS[this._stuffing].calories;
+    finalCalories += this._toppings.reduce(
+      (acc, topping) => acc + Hamburger.TOPPINGS[topping].calories,
+      0,
+    );
+
+    return finalCalories;
+  }
 }
 
-// console.log(typeof Student === object);
-console.log(typeof Student === 'object');
-console.log(typeof Student === 'function');
-// function SocialBook(users = [], posts = {}) {
-//   this.users = users;
-//   this.posts = posts;
-//   this.getAllUsers = () => this.users;
-//   this.getUserByLogin = login =>
-//     this.users.filter(user => user.login === login);
-//   this.getUserStatus = userId =>
-//     this.users
-//       .filter(user => user.id === userId)
-//       .map(filteredUser => (filteredUser.isActive ? 'active' : 'inactive'));
-//   this.addUser = user => {
-//     user.id = getId();
-//     user.isActive = false;
-//     this.users.push(user);
-//   };
-//   this.removeUserById = userId =>
-//     (this.users = this.users.filter(user => user.id !== userId));
-//   this.getUsersCount = () => this.users.length;
-//   this.getUserPosts = userId => this.posts[userId];
-//   this.addPost = (userId, post) => {
-//     post.id = getId();
-//     post.likes = 0;
-//     this.posts[userId].push(post);
-//   };
-//   this.removePost = (userId, postId) => {
-//     this.posts[userId] = this.posts[userId].filter(post => post.id !== postId);
-//   };
-//   this.getAllLikes = userId =>
-//     this.posts[userId].reduce((acc, post) => acc + post.likes, 0);
-//   this.addPostLike = (userId, postId) => {
-//     const post = this.posts[userId].find(post => post.id === postId);
-//     post.likes += 1;
-//   };
-//   this.getPostsCount = userId => this.posts[userId].length;
-// }
+class HamburgerException extends Error {
+  constructor(message) {
+    super(message);
+    this._message = message;
+  }
+}
 
-// const initialUsers = [
-//   {
-//     id: '-s19a6hqce',
-//     login: 'mangozedog@mail.com',
-//     password: 'qwe123zv',
-//     isActive: true,
-//   },
-//   {
-//     id: '-qkpzenjxe',
-//     login: 'polysweet@skynet.ze',
-//     password: '123zxc78',
-//     isActive: true,
-//   },
-//   {
-//     id: '-e51cpd4di',
-//     login: 'ajax2k@change.ua',
-//     password: 'ert234qw',
-//     isActive: false,
-//   },
-// ];
-// const initialPosts = {
-//   '-s19a6hqce': [
-//     { id: '-5sgljaskg', text: 'post #1', likes: 3 },
-//     { id: '-199hb6igr', text: 'post #2', likes: 5 },
-//     { id: '-hy0eyw5qo', text: 'post #3', likes: 13 },
-//   ],
-//   '-qkpzenjxe': [
-//     { id: '-5tu69g5rf', text: 'post #1', likes: 8 },
-//     { id: '-bje766393', text: 'post #2', likes: 15 },
-//   ],
-//   '-e51cpd4di': [
-//     { id: '-9y6nkmlj4', text: 'post #1', likes: 18 },
-//     { id: '-i03pbhy3s', text: 'post #2', likes: 45 },
-//   ],
-// };
-// const getId = () =>
-//   '-' +
-//   Math.random()
-//     .toString(36)
-//     .substr(2, 9);
+Hamburger.SIZE_SMALL = 'SIZE_SMALL';
+Hamburger.SIZE_LARGE = 'SIZE_LARGE';
 
-// const socialBook = new SocialBook(initialUsers, initialPosts);
-// socialBook.addUser({ login: 'someWeirdStuff', password: 'qwerty' });
-// socialBook.addPost('-e51cpd4di', { text: 'Some weird stuff' });
-// socialBook.addPostLike('-e51cpd4di', '-9y6nkmlj4');
-// console.log(socialBook.getUserPosts('-e51cpd4di'));
-// console.log(socialBook.getAllLikes('-e51cpd4di'));
-// console.log(socialBook.getPostsCount('-e51cpd4di'));
+Hamburger.SIZES = {
+  [Hamburger.SIZE_SMALL]: {
+    price: 30,
+    calories: 50,
+  },
+  [Hamburger.SIZE_LARGE]: {
+    price: 50,
+    calories: 100,
+  },
+};
+
+Hamburger.STUFFING_CHEESE = 'STUFFING_CHEESE';
+Hamburger.STUFFING_SALAD = 'STUFFING_SALAD';
+Hamburger.STUFFING_MEAT = 'STUFFING_MEAT';
+
+Hamburger.STUFFINGS = {
+  [Hamburger.STUFFING_CHEESE]: {
+    price: 15,
+    calories: 20,
+  },
+  [Hamburger.STUFFING_SALAD]: { price: 20, calories: 5 },
+  [Hamburger.STUFFING_MEAT]: { price: 35, calories: 15 },
+};
+
+Hamburger.TOPPING_SPICE = 'TOPPING_SPICE';
+Hamburger.TOPPING_SAUCE = 'TOPPING_SAUCE';
+
+Hamburger.TOPPINGS = {
+  [Hamburger.TOPPING_SPICE]: {
+    price: 10,
+    calories: 0,
+  },
+  [Hamburger.TOPPING_SAUCE]: {
+    price: 15,
+    calories: 5,
+  },
+};
+const hamburger = new Hamburger(Hamburger.SIZE_LARGE, Hamburger.STUFFING_MEAT);
+
+try {
+  hamburger.addTopping(null);
+} catch (e) {
+  console.log(e);
+}
+try {
+  hamburger.addTopping(Hamburger.TOPPING_SAUCE);
+} catch (e) {
+  console.log(e);
+}
+try {
+  hamburger.addTopping(Hamburger.TOPPING_SAUCE);
+} catch (e) {
+  console.log(e);
+}
+try {
+  hamburger.removeTopping(Hamburger.TOPPING_SPICE);
+} catch (e) {
+  console.log(e);
+}
+hamburger.addTopping(Hamburger.TOPPING_SPICE);
+console.log(hamburger.calculatePrice());
+console.log(hamburger.calculateCalories());
