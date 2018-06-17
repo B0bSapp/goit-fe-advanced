@@ -58,11 +58,11 @@ class Gallery {
     preview.append(...previewItems);
     preview.addEventListener('click', onClick);
     function onClick(event) {
+      if (event.target.nodeName != 'IMG') return;
       previewItems.forEach(previewItem => {
         previewItem.classList.remove('preview__item--selected');
       });
       event.target.parentNode.classList.add('preview__item--selected');
-      console.log(event.target);
       fullViewImage.setAttribute('src', event.target.dataset.fullview);
     }
     parentNode.appendChild(preview);
