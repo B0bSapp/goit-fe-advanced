@@ -1,0 +1,12 @@
+.user-actions {
+  display: flex;
+  list-style: none;
+}
+
+.user-actions>li {
+  width: 20%;
+}
+
+.all-users-list {
+  padding: 0;
+}
