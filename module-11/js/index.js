@@ -104,7 +104,6 @@ clearBtn.addEventListener('click', onClear);
 let filter = { size: [], color: [], release_date: [] };
 
 function onFilter(event) {
-  console.log(filter);
   event.preventDefault();
   const parentNode = event.currentTarget.parentNode;
   const checkBoxes = Array.from(
@@ -117,19 +116,19 @@ function onFilter(event) {
       const filteredKey = selectedValue.control.attributes.name.nodeValue;
       filter[filteredKey].push(filteredValue);
     });
+    const filteredEntities = laptops.filter(laptop => {
+      if (applyFilter(filter, laptop)) return laptop;
+    });
+    filter = { size: [], color: [], release_date: [] };
+    generateMarkup(filteredEntities);
   }
-  const filteredEntities = laptops.filter(laptop => {
-    if (applyFilter(filter, laptop)) return laptop;
-  });
-  filter = { size: [], color: [], release_date: [] };
-  generateMarkup(filteredEntities);
 }
 
 function applyFilter(filter, laptop) {
   const sizeFilter = filter.size;
   if (
     sizeFilter.length !== 0 &&
-    !sizeFilter.some(element => element == laptop.size)
+    !sizeFilter.some(element => Number(element) === laptop.size)
   )
     return false;
 
@@ -143,7 +142,9 @@ function applyFilter(filter, laptop) {
   const releaseDateFilter = filter.release_date;
   if (
     releaseDateFilter.length !== 0 &&
-    !releaseDateFilter.some(element => element == laptop.release_date)
+    !releaseDateFilter.some(
+      element => Number(element) === laptop.release_date,
+    )
   )
     return false;
 
