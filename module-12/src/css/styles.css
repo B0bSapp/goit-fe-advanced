@@ -1,0 +1,54 @@
+.wrapper {
+  margin: auto
+}
+
+.url-adder {
+  max-width: 30%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+  border-radius: 5px;
+  margin-bottom: 5rem;
+  box-shadow: 0 0 0.5rem grey;
+}
+
+.input {
+  resize: none;
+  height: 3.5rem;
+  font-size: 2rem;
+}
+
+.add-btn {
+  border: none;
+  height: 3.5rem;
+  font-size: 2rem
+}
+
+.items-grid {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.url-wrapper {
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 30%;
+  border-radius: 5px;
+  margin-bottom: 5rem;
+  box-shadow: 0 0 0.5rem grey;
+}
+
+.url-content {
+  word-wrap: break-word;
+  font-size: 1.5rem;
+  flex: 0 0 70%;
+  margin-bottom: 0.5rem;
+}
+
+.remove-btn {
+  border: none;
+  flex: 0 0 30%
+}
