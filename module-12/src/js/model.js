@@ -1,7 +1,6 @@
 'use strict';
-import axios from 'axios';
+import uuid from 'uuid';
 
-axios.defaults.baseURL = 'http://localhost:3000';
 export default class Model {
   constructor() {
     if (!localStorage.getItem('urlAdder')) {
@@ -17,16 +16,14 @@ export default class Model {
   }
 
   saveItem(urlContent) {
-    return axios.post('/urls', { urlContent }).then(response => {
-      if (response.status === 201) {
-        const urlAdder = JSON.parse(localStorage.getItem('urlAdder'));
-        urlAdder.items.push(response.data);
-        localStorage.setItem('urlAdder', JSON.stringify(urlAdder));
-        return response.data;
-      } else {
-        throw Error(`Response status ${response.status}`);
-      }
-    });
+    const response = {
+      urlContent: urlContent,
+      id: uuid.v4(),
+    };
+    const urlAdder = JSON.parse(localStorage.getItem('urlAdder'));
+    urlAdder.items.push(response);
+    localStorage.setItem('urlAdder', JSON.stringify(urlAdder));
+    return response;
   }
 
   itemExists(urlContent) {
@@ -38,16 +35,9 @@ export default class Model {
   }
 
   removeItem(id) {
-    return axios.delete(`/urls/${id}`).then(response => {
-      if (response.status === 200) {
-        const urlAdder = JSON.parse(localStorage.getItem('urlAdder'));
-        const items = urlAdder.items;
-        urlAdder.items = items.filter(item => item.id !== Number(id));
-        localStorage.setItem('urlAdder', JSON.stringify(urlAdder));
-        return response.data;
-      } else {
-        throw new Error(`Response status ${response.status}`);
-      }
-    });
+    const urlAdder = JSON.parse(localStorage.getItem('urlAdder'));
+    const items = urlAdder.items;
+    urlAdder.items = items.filter(item => item.id !== id);
+    localStorage.setItem('urlAdder', JSON.stringify(urlAdder));
   }
 }

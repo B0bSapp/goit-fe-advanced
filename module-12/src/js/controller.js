@@ -20,20 +20,17 @@ export default class Controller {
         this.urlAddr.reset();
         return;
       }
-      this.model.saveItem(urlContent).then(createdItem => {
-        const newItem = this.view.handleAdd(createdItem);
-        const removeBtn = newItem.querySelector('.remove-btn');
-        removeBtn.addEventListener('click', this.onRemove.bind(this));
-      });
+      const newItem = this.view.handleAdd(this.model.saveItem(urlContent));
+      const removeBtn = newItem.querySelector('.remove-btn');
+      removeBtn.addEventListener('click', this.onRemove.bind(this));
       this.urlAddr.reset();
     });
     this.onInit();
   }
   onRemove(event) {
     const itemId = event.target.parentNode.dataset.id;
-    this.model.removeItem(itemId).then(response => {
-      this.view.handleRemove(itemId);
-    });
+    this.model.removeItem(itemId);
+    this.view.handleRemove(itemId);
   }
   onInit() {
     this.view.addItemsBulk(this.model.getExistingItems()).forEach(element => {
